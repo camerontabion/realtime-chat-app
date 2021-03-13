@@ -56,7 +56,7 @@ const RegisterForm = ({ register }) => {
                 null
               )}
             </h3>
-            <Field type="text" name="username" className="form__input" />
+            <Field type="text" name="username" className="form__input" autoFocus />
             <p className="form__muted">
               Username must be between 2 and 30 characters and can only
               contain alphanumeric characters and underscores.

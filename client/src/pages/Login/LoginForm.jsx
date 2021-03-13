@@ -51,7 +51,7 @@ const LoginForm = ({ login }) => {
                 null
               )}
             </h3>
-            <Field type="text" name="username" className="form__input" />
+            <Field type="text" name="username" className="form__input" autoFocus />
           </div>
           <div className="form__group">
             <h3 className={`form__label ${touched.password && errors.password ? 'form__error' : ''}`}>
