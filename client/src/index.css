@@ -213,6 +213,12 @@ a:hover {
   outline: none;
 }
 
+.form__muted {
+  color: var(--light-text);
+  margin-top: 1rem;
+  margin-left: 1rem;
+}
+
 .form__error {
   color: red;
   font-size: var(--base);
