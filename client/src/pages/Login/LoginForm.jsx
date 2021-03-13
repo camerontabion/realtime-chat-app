@@ -38,6 +38,8 @@ const LoginForm = ({ login }) => {
           history.push('/app');
         }
       }}
+      validateOnBlur={false}
+      validateOnChange={false}
     >
       {({ isSubmitting, errors, touched }) => (
         <Form className="form">
