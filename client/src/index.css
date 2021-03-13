@@ -14,6 +14,7 @@ html {
   /* Color Scheme */
   --light-shade: #DFE7E8;
   --light-accent: #C4D2D4;
+  --light-accent-2: #AEC2C5;
   --brand-color-main: #3E2E37;
   --brand-color-accent: #5b4451;
   --light-text: #777777;
@@ -60,7 +61,7 @@ a:hover {
 }
 
 .sidebar__header {
-  border-bottom: .1rem solid black;
+  border-bottom: .1rem solid var(--light-accent-2);
   padding: 1rem;
 }
 
