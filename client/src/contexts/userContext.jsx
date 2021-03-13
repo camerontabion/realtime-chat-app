@@ -1,6 +1,5 @@
 import React, { useState, useEffect, createContext } from 'react';
 import PropTypes from 'prop-types';
-import { useHistory } from 'react-router-dom';
 import auth from '../services/auth';
 
 export const UserContext = createContext(null);
@@ -8,7 +7,6 @@ export const UserContext = createContext(null);
 export const UserProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [authenticating, setAuthenticating] = useState(true);
-  const history = useHistory();
 
   useEffect(() => {
     (async () => {
@@ -21,17 +19,13 @@ export const UserProvider = ({ children }) => {
   const register = async (authInfo) => {
     const registeredUser = await auth.register(authInfo);
     if (registeredUser.error) throw new Error(registeredUser.error);
-
     setUser(registeredUser);
-    history.push('/app');
   };
 
   const login = async (authInfo) => {
     const loggedInUser = await auth.login(authInfo);
     if (loggedInUser.error) throw new Error(loggedInUser.error);
-
     setUser(loggedInUser);
-    history.push('/app');
   };
 
   const logout = async () => {
