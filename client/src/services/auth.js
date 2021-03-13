@@ -1,5 +1,16 @@
 const baseUrl = '/api/auth';
 
+const register = async (authInfo) => {
+  const res = await fetch(`${baseUrl}/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(authInfo),
+  });
+  return res.json();
+};
+
 const login = async (authInfo) => {
   const res = await fetch(`${baseUrl}/login`, {
     method: 'POST',
@@ -26,4 +37,6 @@ const authenticate = async () => {
   return res.json();
 };
 
-export default { login, logout, authenticate };
+export default {
+  register, login, logout, authenticate,
+};
