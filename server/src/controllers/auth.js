@@ -47,6 +47,10 @@ router.post('/register', async (req, res, next) => {
 
     newUser.channels.push(savedChannel.id);
     const savedUser = await newUser.save();
+    await savedUser.populate({
+      path: 'channels',
+      select: 'name',
+    }).execPopulate();
 
     // Create session
     req.session.username = savedUser.username;
