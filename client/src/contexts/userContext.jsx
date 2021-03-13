@@ -18,6 +18,14 @@ export const UserProvider = ({ children }) => {
     })();
   }, []);
 
+  const register = async (authInfo) => {
+    const registeredUser = await auth.register(authInfo);
+    if (registeredUser.error) throw new Error(registeredUser.error);
+
+    setUser(registeredUser);
+    history.push('/app');
+  };
+
   const login = async (authInfo) => {
     const loggedInUser = await auth.login(authInfo);
     if (loggedInUser.error) throw new Error(loggedInUser.error);
@@ -38,6 +46,7 @@ export const UserProvider = ({ children }) => {
         <UserContext.Provider
           value={{
             user,
+            register,
             login,
             logout,
           }}
