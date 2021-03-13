@@ -34,13 +34,13 @@ const RegisterForm = ({ register }) => {
       onSubmit={async (values, { setSubmitting, setFieldError }) => {
         try {
           await register(values);
+          history.push('/app');
         } catch (err) {
           if (err.message.toLowerCase().includes('username')) {
             setFieldError('username', err.message);
           }
         } finally {
           setSubmitting(false);
-          history.push('/app');
         }
       }}
       validateOnBlur={false}

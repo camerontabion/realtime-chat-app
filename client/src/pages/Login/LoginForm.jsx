@@ -28,6 +28,7 @@ const LoginForm = ({ login }) => {
       onSubmit={async (values, { setSubmitting, setErrors }) => {
         try {
           await login(values);
+          history.push('/app');
         } catch (err) {
           setErrors({
             username: 'Invalid username or password!',
@@ -35,7 +36,6 @@ const LoginForm = ({ login }) => {
           });
         } finally {
           setSubmitting(false);
-          history.push('/app');
         }
       }}
       validateOnBlur={false}
