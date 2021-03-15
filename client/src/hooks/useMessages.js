@@ -1,6 +1,7 @@
 import { useReducer, useRef, useEffect } from 'react';
 import { io } from 'socket.io-client';
 import channelsService from '../services/channels';
+import useUserContext from './useUserContext';
 
 const ACTIONS = {
   ADD_MESSAGE: 'addMessage',
@@ -25,6 +26,8 @@ const reducer = (state, action) => {
 };
 
 const useMessages = () => {
+  const { addChannel } = useUserContext();
+
   const socket = useRef();
   const [{ data, channel }, dispatch] = useReducer(reducer, {
     data: [],
@@ -59,8 +62,11 @@ const useMessages = () => {
     });
   };
 
-  const createChannel = async () => {
-    const newChannel = await channelsService.create();
+  const createChannel = async (name) => {
+    const newChannel = await channelsService.create(name);
+    if (newChannel.error) throw new Error(newChannel.error);
+
+    addChannel(newChannel);
     dispatch({
       type: ACTIONS.UPDATE_CHANNEL,
       payload: { channel: newChannel },
@@ -69,6 +75,9 @@ const useMessages = () => {
 
   const joinChannel = async (id) => {
     const newChannel = await channelsService.join(id);
+    if (newChannel.error) throw new Error('Invalid Channel ID!');
+
+    addChannel(newChannel);
     dispatch({
       type: ACTIONS.UPDATE_CHANNEL,
       payload: { channel: newChannel },
