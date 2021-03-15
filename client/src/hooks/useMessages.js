@@ -26,28 +26,13 @@ const reducer = (state, action) => {
 };
 
 const useMessages = () => {
-  const { addChannel } = useUserContext();
+  const { user, addChannel } = useUserContext();
 
   const socket = useRef();
   const [{ data, channel }, dispatch] = useReducer(reducer, {
     data: [],
     channel: {},
   });
-
-  useEffect(() => {
-    socket.current = io('http://localhost:3001', {
-      withCredentials: true,
-    });
-    socket.current.on('message', (message) => {
-      dispatch({
-        type: ACTIONS.ADD_MESSAGE,
-        payload: { message },
-      });
-    });
-    return () => {
-      socket.current.close();
-    };
-  }, []);
 
   const send = (message) => {
     if (channel) socket.current.emit('message', channel.id, message);
@@ -76,11 +61,27 @@ const useMessages = () => {
 
   const joinChannel = async (id) => {
     const newChannel = await channelsService.join(id);
-    if (newChannel.error) throw new Error('Invalid Channel ID!');
+    if (newChannel.error) throw new Error('Cannot join channel!');
 
     addChannel(newChannel);
     updateChannel(newChannel, newChannel.id);
   };
+
+  useEffect(() => {
+    socket.current = io('http://localhost:3001', {
+      withCredentials: true,
+    });
+    changeChannel(user.channels[0].id);
+    socket.current.on('message', (message) => {
+      dispatch({
+        type: ACTIONS.ADD_MESSAGE,
+        payload: { message },
+      });
+    });
+    return () => {
+      socket.current.close();
+    };
+  }, []);
 
   return {
     data,
