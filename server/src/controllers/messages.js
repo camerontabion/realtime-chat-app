@@ -54,4 +54,17 @@ router.get('/', async (req, res, next) => {
   }
 });
 
+router.delete('/:id', async (req, res, next) => {
+  try {
+    const user = await User.findOneAndUpdate(
+      { username: req.session.username },
+      { $pull: { messages: { id: req.params.id } } },
+    );
+    await Message.findByIdAndDelete(req.params.id);
+    res.json(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
 export default router;
