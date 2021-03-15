@@ -34,7 +34,6 @@ const LoginForm = ({ login }) => {
             username: 'Invalid username or password!',
             password: 'Invalid username or password!',
           });
-        } finally {
           setSubmitting(false);
         }
       }}

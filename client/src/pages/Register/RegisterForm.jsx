@@ -39,7 +39,6 @@ const RegisterForm = ({ register }) => {
           if (err.message.toLowerCase().includes('username')) {
             setFieldError('username', err.message);
           }
-        } finally {
           setSubmitting(false);
         }
       }}
