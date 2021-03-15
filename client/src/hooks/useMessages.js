@@ -26,7 +26,7 @@ const reducer = (state, action) => {
 };
 
 const useMessages = () => {
-  const { user, addChannel } = useUserContext();
+  const { user, addChannel, removeChannel } = useUserContext();
 
   const socket = useRef();
   const [{ data, channel }, dispatch] = useReducer(reducer, {
@@ -67,6 +67,12 @@ const useMessages = () => {
     updateChannel(newChannel, newChannel.id);
   };
 
+  const leaveChannel = async (id) => {
+    await channelsService.leave(id);
+    changeChannel(user.channels[0].id, channel.id);
+    removeChannel(id);
+  };
+
   useEffect(() => {
     socket.current = io('http://localhost:3001', {
       withCredentials: true,
@@ -90,6 +96,7 @@ const useMessages = () => {
     changeChannel,
     createChannel,
     joinChannel,
+    leaveChannel,
   };
 };
 

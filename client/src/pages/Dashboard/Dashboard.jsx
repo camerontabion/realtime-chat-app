@@ -18,6 +18,7 @@ const Dashboard = () => {
         currentChannel={messages.channel}
         messages={messages.data}
         send={messages.send}
+        leaveChannel={messages.leaveChannel}
       />
     </main>
   );

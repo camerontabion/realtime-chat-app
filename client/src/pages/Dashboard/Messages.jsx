@@ -1,9 +1,13 @@
 import React, { useState, useRef, useLayoutEffect } from 'react';
 import PropTypes from 'prop-types';
+import useUserContext from '../../hooks/useUserContext';
 
-const Messages = ({ currentChannel, messages, send }) => {
+const Messages = ({
+  currentChannel, messages, send, leaveChannel,
+}) => {
   const [newMessage, setNewMessage] = useState('');
   const messageList = useRef(null);
+  const { user } = useUserContext();
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -19,7 +23,10 @@ const Messages = ({ currentChannel, messages, send }) => {
     <div className="messages">
       <div className="messages__header">
         <h1>{currentChannel.name}</h1>
-        <span className="channel-id">{`- ${currentChannel.id}`}</span>
+        <span className="channel-id">{`- ${currentChannel.id} -`}</span>
+        {user.channels[0].id !== currentChannel.id && (
+          <button type="button" onClick={() => leaveChannel(currentChannel.id)}>Leave Channel</button>
+        )}
       </div>
       <div className="messages__container" ref={messageList}>
         <div className="message__list">
@@ -75,6 +82,7 @@ Messages.propTypes = {
     createdAt: PropTypes.string.isRequired,
   })).isRequired,
   send: PropTypes.func.isRequired,
+  leaveChannel: PropTypes.func.isRequired,
 };
 
 export default Messages;

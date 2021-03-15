@@ -38,6 +38,10 @@ export const UserProvider = ({ children }) => {
     setUser({ ...user, channels: user.channels.concat(newChannel) });
   };
 
+  const removeChannel = (id) => {
+    setUser({ ...user, channels: user.channels.filter((channel) => channel.id !== id) });
+  };
+
   return (
     <>
       {!authenticating && (
@@ -48,6 +52,7 @@ export const UserProvider = ({ children }) => {
             login,
             logout,
             addChannel,
+            removeChannel,
           }}
         >
           {children}

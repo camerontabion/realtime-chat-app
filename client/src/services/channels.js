@@ -23,4 +23,13 @@ const join = async (id) => {
   return res.json();
 };
 
-export default { get, create, join };
+const leave = async (id) => {
+  const res = await fetch(`${baseUrl}/leave/${id}`, {
+    method: 'PUT',
+  });
+  return res.json();
+};
+
+export default {
+  get, create, join, leave,
+};
