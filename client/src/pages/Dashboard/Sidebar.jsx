@@ -1,22 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {
-  Formik, Form, Field, ErrorMessage,
-} from 'formik';
-import * as Yup from 'yup';
 import useUserContext from '../../hooks/useUserContext';
-
-const channelSchema = Yup.object({
-  name: Yup.string()
-    .min(1, 'Must be between 1 and 16 character!')
-    .max(16, 'Must be between 1 and 16 character!')
-    .matches(/^[a-zA-Z0-9_]+$/,
-      'Channel name can only include alphanumeric characters and underscores!')
-    .required('Required!'),
-});
+import JoinChannel from './JoinChannel';
+import CreateChannel from './CreateChannel';
 
 const Sidebar = ({
-  currentChannel, changeChannel, joinChannel, createChannel,
+  currentChannel,
+  changeChannel,
+  joinChannel,
+  createChannel,
 }) => {
   const { user, logout } = useUserContext();
 
@@ -48,64 +40,8 @@ const Sidebar = ({
           </button>
         ))}
       </section>
-      <section className="sidebar__join-channel">
-        <Formik
-          initialValues={{ id: '' }}
-          validationSchema={Yup.object({ id: Yup.string().required('Enter an id!') })}
-          onSubmit={async (values, { setSubmitting, setFieldError, resetForm }) => {
-            try {
-              await joinChannel(values.id);
-              resetForm();
-            } catch (err) {
-              setFieldError('id', err.message);
-            } finally {
-              setSubmitting(false);
-            }
-          }}
-          validateOnBlur={false}
-          validateOnChange={false}
-        >
-          {() => (
-            <Form>
-              <h4>Join channel by id:</h4>
-              <Field type="text" name="id" />
-              <button type="submit">
-                Join
-              </button>
-              <ErrorMessage name="id" component="p" />
-            </Form>
-          )}
-        </Formik>
-      </section>
-      <section className="sidebar__create-channel">
-        <Formik
-          initialValues={{ name: '' }}
-          validationSchema={channelSchema}
-          onSubmit={async (values, { setSubmitting, setFieldError, resetForm }) => {
-            try {
-              await createChannel(values.name);
-              resetForm();
-            } catch (err) {
-              setFieldError('name', err.message);
-            } finally {
-              setSubmitting(false);
-            }
-          }}
-          validateOnBlur={false}
-          validateOnChange={false}
-        >
-          {() => (
-            <Form>
-              <h4>Create a channel:</h4>
-              <Field type="text" name="name" />
-              <button type="submit">
-                Join
-              </button>
-              <ErrorMessage name="name" component="p" />
-            </Form>
-          )}
-        </Formik>
-      </section>
+      <JoinChannel joinChannel={joinChannel} />
+      <CreateChannel createChannel={createChannel} />
     </div>
   );
 };
