@@ -1,8 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Formik, Form, Field, ErrorMessage,
+} from 'formik';
+import * as Yup from 'yup';
 import useUserContext from '../../hooks/useUserContext';
 
-const Sidebar = ({ currentChannel, changeChannel }) => {
+const channelSchema = Yup.object({
+  name: Yup.string()
+    .min(1, 'Must be between 1 and 16 character!')
+    .max(16, 'Must be between 1 and 16 character!')
+    .matches(/^[a-zA-Z0-9_]+$/,
+      'Channel name can only include alphanumeric characters and underscores!')
+    .required('Required!'),
+});
+
+const Sidebar = ({
+  currentChannel, changeChannel, joinChannel, createChannel,
+}) => {
   const { user, logout } = useUserContext();
 
   return (
@@ -20,7 +35,7 @@ const Sidebar = ({ currentChannel, changeChannel }) => {
           </button>
         </div>
       </div>
-      <div className="sidebar__channels">
+      <section className="sidebar__channels">
         <h2>Channels</h2>
         {user.channels.map((channel) => (
           <button
@@ -32,19 +47,65 @@ const Sidebar = ({ currentChannel, changeChannel }) => {
             {channel.name}
           </button>
         ))}
-        {/* <div className="createChannel">
-          <h4>Create a new channel:</h4>
-          <form onSubmit={createChannel}>
-
-          </form>
-        </div>
-        <div className="joinNewChannel">
-          <h4>Join a new channel:</h4>
-          <form onSubmit={addChannel}>
-
-          </form>
-        </div> */}
-      </div>
+      </section>
+      <section className="sidebar__join-channel">
+        <Formik
+          initialValues={{ id: '' }}
+          validationSchema={Yup.object({ id: Yup.string().required('Enter an id!') })}
+          onSubmit={async (values, { setSubmitting, setFieldError, resetForm }) => {
+            try {
+              await joinChannel(values.id);
+              resetForm();
+            } catch (err) {
+              setFieldError('id', err.message);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+          validateOnBlur={false}
+          validateOnChange={false}
+        >
+          {() => (
+            <Form>
+              <h4>Join channel by id:</h4>
+              <Field type="text" name="id" />
+              <button type="submit">
+                Join
+              </button>
+              <ErrorMessage name="id" component="p" />
+            </Form>
+          )}
+        </Formik>
+      </section>
+      <section className="sidebar__create-channel">
+        <Formik
+          initialValues={{ name: '' }}
+          validationSchema={channelSchema}
+          onSubmit={async (values, { setSubmitting, setFieldError, resetForm }) => {
+            try {
+              await createChannel(values.name);
+              resetForm();
+            } catch (err) {
+              setFieldError('name', err.message);
+            } finally {
+              setSubmitting(false);
+            }
+          }}
+          validateOnBlur={false}
+          validateOnChange={false}
+        >
+          {() => (
+            <Form>
+              <h4>Create a channel:</h4>
+              <Field type="text" name="name" />
+              <button type="submit">
+                Join
+              </button>
+              <ErrorMessage name="name" component="p" />
+            </Form>
+          )}
+        </Formik>
+      </section>
     </div>
   );
 };
@@ -61,6 +122,8 @@ Sidebar.propTypes = {
     PropTypes.exact({}),
   ]).isRequired,
   changeChannel: PropTypes.func.isRequired,
+  joinChannel: PropTypes.func.isRequired,
+  createChannel: PropTypes.func.isRequired,
 };
 
 export default Sidebar;
