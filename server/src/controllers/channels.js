@@ -119,6 +119,42 @@ router.put('/join/:id', async (req, res, next) => {
   }
 });
 
+router.put('/leave/:id', async (req, res, next) => {
+  try {
+    // Get channel
+    const channel = await Channel
+      .findById(req.params.id)
+      .populate({
+        path: 'messages',
+        select: 'text createdAt user',
+        populate: {
+          path: 'user',
+          select: 'username',
+        },
+      });
+    if (!channel) throw new Error('Channel does not exist!');
+
+    // Check if user is in channel
+    const user = await User.findOne({ username: req.session.username });
+    if (!channel.users.includes(user.id)) throw new Error('User not in channel!');
+
+    // Remove user from channel
+    user.channels = user.channels.filter((id) => id.toString() !== req.params.id);
+    await user.save();
+    channel.users = channel.users.filter((id) => id.toString() !== user.id);
+    await channel.save();
+    await channel.populate({
+      path: 'users',
+      select: 'username',
+    }).execPopulate();
+
+    // Return channel
+    res.json({ message: 'Successfully left channel!' });
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.delete('/:id', async (req, res, next) => {
   try {
     // Delete channel
