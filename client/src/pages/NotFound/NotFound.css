@@ -1,0 +1,20 @@
+.not-found {
+  padding: 2rem;
+  background-color: var(--light-shade);
+  margin: 1rem auto;
+  border-radius: 2rem;
+  max-width: 40rem;
+  min-height: 60rem;
+}
+
+.not-found h1 {
+  text-align: center;
+  font-size: var(--larger);
+}
+
+.not-found a {
+  display: block;
+  border-top: .1rem solid black;
+  padding: 1rem 0;
+  font-size: var(--base);
+}
