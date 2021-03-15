@@ -138,6 +138,9 @@ router.put('/leave/:id', async (req, res, next) => {
     const user = await User.findOne({ username: req.session.username });
     if (!channel.users.includes(user.id)) throw new Error('User not in channel!');
 
+    // Checks if the channel is the user's personal channel
+    if (user.channels[0].toString() === req.params.id) throw new Error('Cannot leave personal channel!');
+
     // Remove user from channel
     user.channels = user.channels.filter((id) => id.toString() !== req.params.id);
     await user.save();
