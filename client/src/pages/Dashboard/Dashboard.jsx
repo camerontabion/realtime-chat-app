@@ -15,6 +15,7 @@ const Dashboard = () => {
         createChannel={messages.createChannel}
       />
       <Messages
+        currentChannel={messages.channel}
         messages={messages.data}
         send={messages.send}
       />
