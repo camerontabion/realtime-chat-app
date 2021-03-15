@@ -11,6 +11,8 @@ const Dashboard = () => {
       <Sidebar
         currentChannel={messages.channel}
         changeChannel={messages.changeChannel}
+        joinChannel={messages.joinChannel}
+        createChannel={messages.createChannel}
       />
       <Messages
         messages={messages.data}
