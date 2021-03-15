@@ -53,8 +53,7 @@ const useMessages = () => {
     if (channel) socket.current.emit('message', channel.id, message);
   };
 
-  const changeChannel = async (id) => {
-    const newChannel = await channelsService.get(id);
+  const updateChannel = (newChannel, id) => {
     socket.current.emit('join', channel.id, id);
     dispatch({
       type: ACTIONS.UPDATE_CHANNEL,
@@ -62,15 +61,17 @@ const useMessages = () => {
     });
   };
 
+  const changeChannel = async (id) => {
+    const newChannel = await channelsService.get(id);
+    updateChannel(newChannel, id);
+  };
+
   const createChannel = async (name) => {
     const newChannel = await channelsService.create(name);
     if (newChannel.error) throw new Error(newChannel.error);
 
     addChannel(newChannel);
-    dispatch({
-      type: ACTIONS.UPDATE_CHANNEL,
-      payload: { channel: newChannel },
-    });
+    updateChannel(newChannel, newChannel.id);
   };
 
   const joinChannel = async (id) => {
@@ -78,10 +79,7 @@ const useMessages = () => {
     if (newChannel.error) throw new Error('Invalid Channel ID!');
 
     addChannel(newChannel);
-    dispatch({
-      type: ACTIONS.UPDATE_CHANNEL,
-      payload: { channel: newChannel },
-    });
+    updateChannel(newChannel, newChannel.id);
   };
 
   return {
