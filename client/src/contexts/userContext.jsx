@@ -34,6 +34,10 @@ export const UserProvider = ({ children }) => {
     else setUser(null);
   };
 
+  const addChannel = (newChannel) => {
+    setUser({ ...user, channels: user.channels.concat(newChannel) });
+  };
+
   return (
     <>
       {!authenticating && (
@@ -43,6 +47,7 @@ export const UserProvider = ({ children }) => {
             register,
             login,
             logout,
+            addChannel,
           }}
         >
           {children}
