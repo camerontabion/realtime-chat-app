@@ -16,6 +16,7 @@ export const socketMessages = async (socket, socketServer) => {
 
     // Add socket to channel
     socket.join(channel);
+    console.log('joining:', channel);
   });
 
   socket.on('message', async (channelId, text) => {
