@@ -6,7 +6,7 @@ export const notFound = (req, res, next) => {
 
 // eslint-disable-next-line no-unused-vars
 export const handleError = (error, req, res, next) => {
-  const statusCode = req.statusCode === 200 ? 500 : res.statusCode;
+  const statusCode = res.statusCode === 200 ? 500 : res.statusCode;
   res.status(statusCode);
   console.log(`Error: ${error.message}`);
   res.json({ error: error.message });
